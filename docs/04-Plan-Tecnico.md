@@ -1,537 +1,498 @@
-\# TurnoSmarts
+# TurnoSmarts
+## Fase 3: Plan técnico — Entidades, controladores y arquitectura (Actualizado)
 
-\## Fase 3: Plan técnico — Parte 1
+**Responsable:** FreddyH06  
+**Revisor:** Alexiho11  
+**Metodología:** Spec Driven Development (SDD)  
+**Versión:** 0.2  
+**Estado:** Pendiente de revisión
 
+### 1. Introducción
 
+El presente documento describe la arquitectura técnica propuesta para desarrollar TurnoSmarts, tomando como referencia las funcionalidades del sistema original Virtual List .NET.
 
-\*\*Responsable:\*\* FreddyH06  
+El objetivo es conservar la administración de empresas, sucursales, filas de atención, usuarios, tótems, tickets, citas, notificaciones, seguridad, estadísticas y reportes.
 
-\*\*Metodología:\*\* Spec Driven Development (SDD)  
+La principal modificación respecto al sistema original será eliminar el almacenamiento permanente en XML y administrar los registros exclusivamente mediante listas de objetos en memoria.
 
-\*\*Versión:\*\* 0.1  
+El desarrollo se realizará utilizando C# Windows Forms, programación orientada a objetos, clases TList y consultas LINQ.
 
-\*\*Estado:\*\* Propuesta técnica pendiente de aprobación
+### 2. Tecnologías del proyecto
 
+- Lenguaje: C#.
+- Plataforma: .NET Framework 4.8.
+- Interfaz: Windows Forms.
+- Entorno: Visual Studio 2026.
+- Control de versiones: Git y GitHub.
+- Asistente de programación: GitHub Copilot.
+- Metodología: Spec Driven Development.
+- Colecciones: List<T>.
+- Consultas: LINQ.
+- Pruebas: manuales y automatizadas cuando corresponda.
 
+### 3. Estructura del proyecto
 
-\### 1. Introducción
+El código se organizará en tres carpetas principales.
 
+**Entidades**
 
+Contendrá las clases que representan la información del negocio.
 
-El presente documento establece la planificación técnica para el desarrollo de TurnoSmarts, un sistema de gestión de citas, turnos y atención de usuarios.
+**Controlador**
 
+Contendrá las clases TList y los componentes encargados de la lógica del sistema, seguridad, notificaciones y utilidades.
 
+**Formularios**
 
-El sistema será desarrollado mediante C# Windows Forms, aplicando programación orientada a objetos, clases administradoras TList y consultas LINQ.
+Contendrá las ventanas Windows Forms, con sus archivos de diseño y los eventos correspondientes.
 
+No se creará una capa de persistencia XML ni una base de datos.
 
+### 4. Diseño de entidades
 
-La implementación será generada con apoyo de inteligencia artificial, utilizando los requerimientos y especificaciones elaborados durante las fases anteriores.
+Se implementarán siete entidades principales.
 
+#### 4.1. Empresa
 
+Representará la configuración general de la organización.
 
-\### 2. Tecnologías
+**Atributos privados:**
 
+- ruc: string
+- razonSocial: string
+- correo: string
+- obligarCedula: bool
+- obligarNombre: bool
+- obligarCorreo: bool
+- obligarTelefono: bool
+- smtpServidor: string
+- smtpPuerto: int
+- smtpUsuario: string
+- smtpSsl: bool
+- correo365AppId: string
+- correo365Tenant: string
 
+Se utilizará un objeto Empresa compartido durante la ejecución.
 
-\- Lenguaje: C#.
+El objeto contendrá la información institucional y las preferencias de los campos obligatorios.
 
-\- Plataforma: .NET Framework 4.8.
+Las credenciales privadas del servicio de correo no se almacenarán como texto directamente en el código.
 
-\- Interfaz gráfica: Windows Forms.
+#### 4.2. Sucursal
 
-\- Entorno de desarrollo: Visual Studio 2026.
+Representará los establecimientos donde se brindará atención.
 
-\- Control de versiones: Git y GitHub.
+**Atributos privados:**
 
-\- Asistente de programación: GitHub Copilot.
+- codigo: string
+- direccion: string
+- telefono: string
+- inicioAtencion: string
+- finAtencion: string
 
-\- Metodología: Spec Driven Development.
+Cada sucursal podrá tener varias filas.
 
-\- Administración de datos: List<T>.
+Los horarios deberán validarse antes de registrar o modificar una sucursal.
 
-\- Consultas: LINQ.
+#### 4.3. Fila
 
+Representará los servicios de atención ofrecidos por las sucursales.
 
+**Atributos privados:**
 
-No se utilizarán bases de datos ni archivos XML para persistir información.
+- codigo: string
+- codigoSucursal: string
+- descripcion: string
+- tiempoEstimadoMinutos: int
+- costoEstimado: decimal
+- cantidadVentanillas: int
 
+Cada fila estará asociada a una sucursal.
 
+El tiempo estimado y la cantidad de ventanillas se utilizarán para calcular la disponibilidad de citas y los tiempos aproximados de espera.
 
-\### 3. Arquitectura del sistema
+#### 4.4. Usuario
 
+Representará a las personas autorizadas a administrar o atender turnos.
 
+**Atributos privados:**
 
-Se utilizará una estructura organizada mediante tres carpetas principales:
+- username: string
+- nombre: string
+- apellidos: string
+- telefono: string
+- claveHash: string
+- tipoUsuario: string
+- codigoSucursal: string
+- ventanilla: string
+- activo: bool
 
+Los roles iniciales serán ADMINISTRADOR y TRABAJADOR.
 
+La contraseña no se guardará directamente. Se utilizará una función de hash segura y verificación.
 
-\*\*Entidades:\*\* Contendrá las clases que representan los objetos del sistema.
+Los trabajadores accederán a las funciones autorizadas para su sucursal y ventanilla.
 
+#### 4.5. Totem
 
+Representará un punto de emisión de tickets.
 
-\*\*Controlador:\*\* Contendrá las clases TList encargadas de administrar las colecciones de objetos y las operaciones sobre ellas.
+**Atributos privados:**
 
+- codigo: string
+- codigoSucursal: string
+- ubicacion: string
+- codigosFila: List<string>
 
+La colección codigosFila permitirá relacionar el tótem con los servicios habilitados.
 
-\*\*Formularios:\*\* Contendrá las ventanas Windows Forms que permitirán la interacción con los usuarios.
+Esta colección no sustituirá a las listas administradoras TList.
 
+Un tótem solamente podrá utilizar servicios correspondientes a su sucursal.
 
+#### 4.6. Ticket
 
-Los formularios utilizarán los controladores para registrar, buscar, modificar y eliminar información.
+Representará tanto los turnos inmediatos como las citas programadas.
 
+**Atributos privados:**
 
+- id: int
+- codigoFila: string
+- numero: int
+- codigoTicket: string
+- programado: bool
+- cedula: string
+- nombres: string
+- email: string
+- telefono: string
+- solicitoRecordatorio: bool
+- solicitoSms: bool
+- fechaEmision: DateTime
+- fechaCita: DateTime
+- estado: string
+- usuarioAtencion: string
+- ventanilla: string
+- fechaLlamado: DateTime
+- inicioAtencion: DateTime
+- finAtencion: DateTime
 
-\### 4. Diseño propuesto de entidades
+El atributo programado permitirá identificar las citas reservadas.
 
+Los turnos inmediatos y las citas compartirán la entidad Ticket sin crear una clase adicional.
 
+Se conservarán los registros atendidos para los reportes mientras la aplicación permanezca abierta.
 
-Inicialmente se trabajará con siete entidades principales.
+#### 4.7. Recordatorio
 
+Representará los avisos relacionados con los tickets.
 
+**Atributos privados:**
 
-\#### 4.1. Empresa
+- id: int
+- ticketId: int
+- tipoEnvio: string
+- direccionEnvio: string
+- contenido: string
+- fechaHoraEnvio: DateTime
+- enviado: bool
+- resultado: string
 
+Los recordatorios podrán representar notificaciones por correo electrónico y solicitudes de SMS.
 
+Los registros pendientes permanecerán en memoria y podrán consultarse desde su formulario.
 
-Representará las empresas registradas en el sistema.
+### 5. Constructores y propiedades
 
+Todas las entidades deberán mantener el estilo definido para el proyecto de C#:
 
+- Atributos privados.
+- Constructor vacío.
+- Constructor parametrizado que reciba todos los atributos necesarios.
+- Propiedades públicas.
+- Métodos específicos cuando sean necesarios.
+- Una clase por archivo.
 
-Atributos propuestos:
+Los nombres y tipos de las propiedades deberán corresponder a sus atributos.
 
-\- idEmpresa
+No se agregará lógica de formularios dentro de las entidades.
 
-\- nombre
+### 6. Controladores TList
 
-\- ruc
+El sistema utilizará seis controladores principales.
 
-\- correo
+| Controlador | Colección |
+|---|---|
+| TListSucursales | List<Sucursal> |
+| TListFilas | List<Fila> |
+| TListUsuarios | List<Usuario> |
+| TListTotems | List<Totem> |
+| TListTickets | List<Ticket> |
+| TListRecordatorios | List<Recordatorio> |
 
-\- telefono
+Las listas serán compartidas durante la ejecución para que todos los formularios trabajen con los mismos objetos.
 
-\- estado
+La información general de Empresa se administrará mediante un único objeto de configuración en memoria.
 
+### 7. Operaciones de los controladores
 
+Los controladores de catálogos permitirán:
 
-\#### 4.2. Sucursal
+**Agregar:** incorporar un objeto después de verificar sus datos e identificador.
 
+**Modificar:** actualizar un registro existente.
 
+**Eliminar:** quitar un registro cuando las relaciones lo permitan.
 
-Representará las sucursales pertenecientes a las empresas.
+**Buscar:** localizar registros utilizando su identificador.
 
+**Obtener:** recuperar un objeto mediante su posición o identificador.
 
+**Listar:** recuperar información para mostrar en los formularios.
 
-Atributos propuestos:
+Cada clase implementará las operaciones que correspondan a su responsabilidad.
 
-\- idSucursal
+TListTickets tendrá operaciones adicionales para gestionar tickets, reservas y estados de atención.
 
-\- idEmpresa
+### 8. Funcionamiento de TListTickets
 
-\- nombre
+El controlador TListTickets será responsable de:
 
-\- direccion
+- Validar los datos del cliente.
+- Generar identificadores y códigos únicos.
+- Registrar tickets normales.
+- Registrar citas programadas.
+- Consultar tickets.
+- Verificar disponibilidad de reservas.
+- Anular citas permitidas.
+- Consultar turnos pendientes.
+- Seleccionar el siguiente turno.
+- Llamar a un turno.
+- Iniciar la atención.
+- Finalizar la atención.
+- Omitir turnos.
+- Reabrir turnos autorizados.
+- Conservar el historial durante la ejecución.
 
-\- telefono
+La numeración se organizará por fila, fecha y tipo de solicitud, siguiendo el formato establecido en las decisiones técnicas.
 
-\- estado
+Los cambios de estado deberán validarse antes de modificar los objetos.
 
+### 9. Gestión de citas y disponibilidad
 
+Las citas programadas utilizarán el atributo programado de Ticket.
 
-\#### 4.3. Fila
+La disponibilidad se calculará teniendo en cuenta:
 
+- La sucursal seleccionada.
+- El servicio o fila.
+- El horario de atención.
+- El tiempo estimado del servicio.
+- La cantidad de ventanillas.
+- Las reservas existentes.
+- La fecha y hora solicitadas.
 
+No se permitirá registrar una cita fuera del horario o cuando no exista capacidad disponible.
 
-Representará los servicios y filas de atención disponibles.
+Las citas anuladas se conservarán como registro, pero no participarán en la atención.
 
+### 10. Relaciones entre entidades
 
+Las relaciones principales serán:
 
-Atributos propuestos:
+- Una sucursal podrá tener varias filas.
+- Una fila pertenecerá a una sucursal.
+- Un usuario podrá estar asociado a una sucursal.
+- Un usuario trabajador podrá tener una ventanilla asignada.
+- Un tótem pertenecerá a una sucursal.
+- Un tótem podrá tener varias filas habilitadas.
+- Un ticket pertenecerá a una fila.
+- Un ticket podrá relacionarse con un usuario de atención.
+- Un ticket podrá tener varios recordatorios.
 
-\- idFila
+Las relaciones se implementarán mediante identificadores, y los controladores verificarán su existencia cuando corresponda.
 
-\- idSucursal
+### 11. Seguridad del sistema
 
-\- nombreServicio
+El componente Seguridad se ubicará dentro de Controlador.
 
-\- prefijoTurno
+Será responsable de crear y verificar hashes de contraseñas.
 
-\- capacidadAtencion
+El inicio de sesión validará que el usuario exista, esté activo y tenga las credenciales correctas.
 
-\- estado
+Se establecerá un procedimiento de inicialización para la primera cuenta administradora. No deberán mantenerse contraseñas de demostración inseguras como credenciales definitivas.
 
+El acceso a los formularios se controlará según el rol del usuario.
 
+### 12. Notificaciones por correo electrónico
 
-\#### 4.4. Usuario
+El componente CorreoInstitucional se ubicará en Controlador.
 
+Permitirá gestionar el envío real de correos mediante un servicio autorizado.
 
+Se contemplará la integración con Outlook clásico o Microsoft Graph, cuando la configuración y los permisos institucionales lo permitan.
 
-Representará a los administradores y trabajadores del sistema.
+Al registrar una cita, el sistema intentará enviar una confirmación al correo del cliente.
 
+La confirmación incluirá:
 
+- Código de la cita.
+- Servicio solicitado.
+- Sucursal.
+- Fecha de reserva.
+- Hora de atención.
 
-Atributos propuestos:
+Cuando se produzca un error de envío, la cita permanecerá registrada y se creará o conservará el aviso pendiente.
 
-\- idUsuario
+No se eliminarán citas por problemas del proveedor de correo.
 
-\- cedula
+Las credenciales y tokens deberán manejarse de forma segura y no se incorporarán al repositorio GitHub.
 
-\- nombre
+### 13. Gestión de recordatorios y SMS
 
-\- apellido
+TListRecordatorios permitirá administrar los avisos pendientes.
 
-\- correo
+Frm_Recordatorios utilizará ese controlador para mostrar los registros y solicitar el envío manual.
 
-\- rol
+El envío real de SMS será opcional y requerirá la configuración de un proveedor autorizado.
 
-\- estado
+No se simulará un envío exitoso cuando el proveedor no esté configurado.
 
+### 14. Componente Utilidades
 
+El componente Utilidades reunirá funciones comunes utilizadas por los formularios.
 
-Se definirán los permisos correspondientes a cada rol antes de generar el código.
+Entre ellas:
 
+- Presentación de información en DataGridView.
+- Exportación manual de reportes a CSV.
+- Impresión de tickets.
+- Formatos y conversiones auxiliares.
+- Funciones de apoyo para notificaciones, cuando corresponda.
 
+Estas funciones no almacenarán permanentemente los registros del sistema.
 
-\#### 4.5. Totem
+### 15. Gestión de datos en memoria
 
+El sistema original contenía DatosSistema y Repositorio para guardar y cargar información mediante XML.
 
+En TurnoSmarts se eliminarán esas responsabilidades de persistencia.
 
-Representará los puntos donde los clientes podrán solicitar tickets.
+La nueva implementación utilizará:
 
+- Un objeto Empresa compartido.
+- Seis listas TList estáticas.
+- Un mecanismo de inicialización de datos en memoria.
+- Un generador de identificadores únicos durante la ejecución.
 
+Se podrá cargar información de prueba al iniciar, cuando sea necesario para verificar los módulos.
 
-Atributos propuestos:
+No se utilizarán archivos XML ni JSON para guardar o restaurar registros.
 
-\- idTotem
+Al cerrar la aplicación, los registros creados durante la ejecución se perderán.
 
-\- idSucursal
+### 16. Consultas LINQ
 
-\- nombre
+Se utilizará LINQ sobre las listas para implementar:
 
-\- ubicacion
+- Sucursales registradas.
+- Servicios por sucursal.
+- Usuarios activos e inactivos.
+- Tótems por sucursal.
+- Tickets pendientes.
+- Tickets atendidos.
+- Citas por fecha.
+- Turnos por ventanilla.
+- Cantidades por estado.
+- Cantidades por servicio.
+- Últimos tickets generados.
+- Estadísticas generales.
 
-\- estado
+Se utilizarán operaciones Where, Select, OrderBy, GroupBy, Count, Any, FirstOrDefault y ToList, entre otras.
 
+Los resultados se mostrarán principalmente en controles DataGridView.
 
+### 17. Formularios e integración
 
-\#### 4.6. Ticket
+La capa Formularios estará formada por las 15 ventanas definidas en las especificaciones:
 
+- Frm_Login.
+- Frm_Principal.
+- Frm_Dashboard.
+- Frm_Empresa.
+- Frm_Sucursales.
+- Frm_Filas.
+- Frm_Usuarios.
+- Frm_Totems.
+- Frm_Turnos.
+- Frm_Citas.
+- Frm_Atencion.
+- Frm_Reportes.
+- Frm_Pantalla.
+- Frm_Recordatorios.
+- Frm_Perfil.
 
+Cada formulario utilizará los controladores correspondientes.
 
-Representará los turnos y las reservas de atención.
+Los archivos Designer permitirán modificar visualmente los componentes desde Visual Studio.
 
+La pantalla externa compartirá los registros de las listas y se actualizará cada segundo mediante un Timer de Windows Forms.
 
+### 18. Orden de implementación
 
-Atributos propuestos:
+La generación del código mediante GitHub Copilot seguirá un orden incremental:
 
-\- idTicket
+1. Crear las entidades y sus propiedades.
+2. Implementar los seis controladores TList.
+3. Crear el componente de configuración general en memoria.
+4. Implementar seguridad e inicialización.
+5. Implementar los formularios administrativos.
+6. Implementar la generación e impresión de tickets.
+7. Implementar las citas y sus validaciones.
+8. Implementar el proceso de atención.
+9. Implementar la pantalla externa.
+10. Implementar correo electrónico y recordatorios.
+11. Implementar Dashboard, perfil y reportes.
+12. Integrar y comprobar los módulos.
 
-\- idFila
+Cada etapa deberá contar con una especificación aprobada y pruebas de funcionamiento.
 
-\- codigoTurno
+### 19. Verificación técnica
 
-\- tipoSolicitud
+Durante las pruebas se comprobará:
 
-\- cedulaCliente
+- Que existan las siete entidades.
+- Que sus constructores y propiedades funcionen.
+- Que los seis controladores administren correctamente las listas.
+- Que no se registren identificadores duplicados.
+- Que las relaciones entre entidades sean válidas.
+- Que la generación de tickets y reservas funcione.
+- Que los cambios de estado se realicen correctamente.
+- Que los formularios utilicen los controladores.
+- Que todos los componentes visuales sean editables.
+- Que las consultas LINQ devuelvan resultados correctos.
+- Que la impresión funcione.
+- Que la pantalla externa se actualice.
+- Que los errores de correo no eliminen registros.
+- Que la aplicación funcione sin almacenamiento XML ni base de datos.
 
-\- nombreCliente
+### 20. Control de versiones y trabajo colaborativo
 
-\- correoCliente
+Cada integrante realizará sus tareas en ramas independientes.
 
-\- fechaGeneracion
+Los cambios se enviarán mediante commits y Pull Requests.
 
-\- fechaCita
+Antes de integrar una implementación a master, otro integrante deberá revisar el código y comprobar que cumple las especificaciones.
 
-\- estado
+GitHub Actions podrá utilizarse para automatizar la compilación y las verificaciones compatibles con Windows y .NET Framework 4.8.
 
+### 21. Estado del documento
 
+**Proyecto:** TurnoSmarts  
+**Responsable:** FreddyH06  
+**Revisor:** Alexiho11  
+**Versión:** 0.2  
+**Estado:** Pendiente de revisión.
 
-Se propone utilizar el atributo tipoSolicitud para diferenciar entre un turno inmediato y una cita programada.
+Este documento actualiza el plan técnico original para conservar las funcionalidades de Virtual List .NET, reemplazando únicamente el almacenamiento permanente de registros por estructuras List<T> en memoria.
 
-
-
-Esta decisión deberá ser revisada por el equipo para determinar si las citas requieren una entidad independiente.
-
-
-
-\#### 4.7. Recordatorio
-
-
-
-Representará las notificaciones relacionadas con las citas y turnos.
-
-
-
-Atributos propuestos:
-
-\- idRecordatorio
-
-\- idTicket
-
-\- destinatario
-
-\- fechaProgramada
-
-\- estadoEnvio
-
-
-
-\### 5. Constructores y propiedades
-
-
-
-Las entidades utilizarán la siguiente estructura:
-
-
-
-\- Atributos privados.
-
-\- Constructor vacío.
-
-\- Constructor parametrizado.
-
-\- Propiedades públicas para acceder a los atributos.
-
-\- Métodos específicos cuando sean necesarios.
-
-
-
-Se mantendrá una estructura de clases clara, sin incorporar funciones innecesarias.
-
-
-
-\### 6. Diseño de controladores TList
-
-
-
-Cada entidad contará con una clase administradora de listas:
-
-
-
-\- TListEmpresa
-
-\- TListSucursal
-
-\- TListFila
-
-\- TListUsuario
-
-\- TListTotem
-
-\- TListTicket
-
-\- TListRecordatorio
-
-
-
-Las clases TList utilizarán colecciones List<T> compartidas durante la ejecución del programa.
-
-
-
-\### 7. Operaciones de los controladores
-
-
-
-Los controladores deberán implementar operaciones como:
-
-
-
-\*\*Agregar:\*\* Registrar un objeto en la lista, validando que no exista un identificador duplicado.
-
-
-
-\*\*Modificar:\*\* Actualizar los datos de un objeto existente.
-
-
-
-\*\*Eliminar:\*\* Eliminar un objeto cuando las reglas de negocio permitan hacerlo.
-
-
-
-\*\*Buscar:\*\* Localizar un objeto utilizando su identificador.
-
-
-
-\*\*Obtener:\*\* Recuperar un elemento o una colección de elementos.
-
-
-
-\*\*Listar:\*\* Obtener información para mostrarla en los formularios.
-
-
-
-Las operaciones deberán respetar las relaciones entre entidades.
-
-
-
-\### 8. Relaciones entre entidades
-
-
-
-Se establecen las siguientes relaciones iniciales:
-
-
-
-\- Una empresa podrá tener varias sucursales.
-
-\- Una sucursal pertenecerá a una empresa.
-
-\- Una sucursal podrá tener varias filas de atención.
-
-\- Una sucursal podrá tener varios tótems.
-
-\- Una fila podrá contener varios tickets.
-
-\- Un ticket podrá tener recordatorios asociados.
-
-
-
-Los controladores administrarán las relaciones utilizando identificadores.
-
-
-
-\### 9. Consultas LINQ
-
-
-
-El sistema utilizará LINQ para realizar consultas sobre las listas de objetos.
-
-
-
-Se contemplan las siguientes operaciones:
-
-
-
-\- Consultar sucursales por empresa.
-
-\- Filtrar servicios por sucursal.
-
-\- Buscar usuarios por cédula.
-
-\- Consultar tickets por estado.
-
-\- Filtrar citas por fecha.
-
-\- Ordenar turnos según el orden de atención.
-
-\- Agrupar tickets por servicio.
-
-\- Contar turnos atendidos.
-
-\- Generar estadísticas y reportes.
-
-
-
-Las consultas se mostrarán principalmente mediante controles DataGridView.
-
-
-
-\### 10. Gestión de datos en memoria
-
-
-
-La información se administrará exclusivamente mediante List<T>.
-
-
-
-Las clases administradoras mantendrán los registros disponibles mientras se encuentre ejecutándose la aplicación.
-
-
-
-Al cerrar el programa, la información registrada se perderá.
-
-
-
-No se implementará almacenamiento permanente mediante SQL, XML, JSON u otros archivos de datos.
-
-
-
-\### 11. Restricciones de implementación
-
-
-
-\- Utilizar C# Windows Forms.
-
-\- Mantener las entidades separadas de los controladores.
-
-\- Utilizar List<T> para administrar objetos.
-
-\- Implementar consultas LINQ.
-
-\- Evitar duplicados.
-
-\- Validar los campos obligatorios.
-
-\- Respetar las relaciones entre entidades.
-
-\- Mantener los controles gráficos visibles y editables en el diseñador.
-
-\- No generar código antes de revisar el plan técnico.
-
-
-
-\### 12. Aspectos pendientes
-
-
-
-Antes de la implementación deberán definirse:
-
-
-
-\- Si Ticket representará también las citas o si se necesitará una entidad Cita.
-
-\- La numeración exacta de los turnos.
-
-\- Las reglas de prioridad.
-
-\- Las restricciones para eliminar registros relacionados.
-
-\- Los permisos de cada rol.
-
-\- Las transiciones permitidas entre estados de atención.
-
-\- La configuración de los correos electrónicos.
-
-
-
-Estas decisiones se revisarán conjuntamente con las especificaciones de la Fase 2.
-
-
-
-\### 13. Verificación del plan
-
-
-
-Antes de generar código se comprobará que:
-
-
-
-1\. Las entidades representan los requisitos funcionales.
-
-2\. Los controladores administran correctamente las relaciones.
-
-3\. Las operaciones permiten desarrollar las funcionalidades solicitadas.
-
-4\. Las consultas pueden implementarse utilizando LINQ.
-
-5\. Las restricciones técnicas coinciden con los requerimientos.
-
-6\. Las decisiones pendientes hayan sido resueltas.
-
-
-
-\### 14. Estado del documento
-
-
-
-\*\*Proyecto:\*\* TurnoSmarts  
-
-\*\*Responsable:\*\* FreddyH06  
-
-\*\*Versión:\*\* 0.1  
-
-
-
-
-Este documento constituye la propuesta técnica inicial de entidades y controladores. Deberá complementarse con el diseño de formularios y el funcionamiento de los módulos de atención antes de comenzar la implementación.
-
+La implementación y las pruebas se realizarán durante las siguientes fases de SDD.
