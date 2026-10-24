@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C4C254C0-A94F-4875-BDEF-0951107EFCBD}</ProjectGuid>
+    <ProjectGuid>{041F9CEA-4CBC-9F34-1862-0989C69DEBEE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Proyecto_PA_Parcial_1</RootNamespace>
     <AssemblyName>Proyecto_PA_Parcial_1</AssemblyName>
@@ -65,6 +65,18 @@
     <Compile Include="Formularios\Frm_Dashboard.Designer.cs">
       <DependentUpon>Frm_Dashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\Frm_Empresa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Empresa.Designer.cs">
+      <DependentUpon>Frm_Empresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Filas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Filas.Designer.cs">
+      <DependentUpon>Frm_Filas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\Frm_Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,17 +89,28 @@
     <Compile Include="Formularios\Frm_Principal.Designer.cs">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\Frm_Sucursales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Sucursales.Designer.cs">
+      <DependentUpon>Frm_Sucursales.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Formularios\Frm_Dashboard.resx">
       <DependentUpon>Frm_Dashboard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Empresa.resx">
+      <DependentUpon>Frm_Empresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Filas.resx" />
     <EmbeddedResource Include="Formularios\Frm_Login.resx">
       <DependentUpon>Frm_Login.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Principal.resx">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Sucursales.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
