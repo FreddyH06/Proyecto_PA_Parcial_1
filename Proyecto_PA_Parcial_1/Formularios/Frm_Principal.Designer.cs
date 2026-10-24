@@ -76,7 +76,7 @@ namespace Proyecto_PA_Parcial_1.Formularios
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 0);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.Padding = new System.Windows.Forms.Padding(11, 11, 11, 11);
+            this.panelMenu.Padding = new System.Windows.Forms.Padding(11);
             this.panelMenu.Size = new System.Drawing.Size(263, 768);
             this.panelMenu.TabIndex = 0;
             // 
@@ -133,6 +133,7 @@ namespace Proyecto_PA_Parcial_1.Formularios
             this.button11.TabIndex = 12;
             this.button11.Text = "Pantalla";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click_1);
             // 
             // button10
             // 

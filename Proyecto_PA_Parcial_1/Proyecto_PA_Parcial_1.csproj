@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controlador\CorreoInstitucional.cs" />
+    <Compile Include="Controlador\TListDatosIniciales.cs" />
     <Compile Include="Controlador\TListFilas.cs" />
     <Compile Include="Controlador\TListRecordatorios.cs" />
     <Compile Include="Controlador\TListSucursales.cs" />
