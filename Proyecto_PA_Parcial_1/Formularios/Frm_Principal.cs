@@ -13,7 +13,7 @@ namespace Proyecto_PA_Parcial_1.Formularios
         public Frm_Principal() : this(null)
         {
         }
-
+        private Frm_Pantalla pantallaExterna;
         public Frm_Principal(Usuario usuario)
         {
             usuarioActual = usuario;
@@ -174,10 +174,32 @@ namespace Proyecto_PA_Parcial_1.Formularios
             CargarFormularioEnPanel(new Frm_Reportes());
         }
 
+
         private void button11_Click(object sender, EventArgs e)
         {
-            CargarFormularioEnPanel(new Frm_Pantalla());
+            if (pantallaExterna == null || pantallaExterna.IsDisposed)
+            {
+                pantallaExterna = new Frm_Pantalla();
+
+                pantallaExterna.StartPosition = FormStartPosition.Manual;
+
+                Screen monitor = Screen.AllScreens.Length > 1
+                    ? Screen.AllScreens[1]
+                    : Screen.FromControl(this);
+
+                pantallaExterna.Location = monitor.WorkingArea.Location;
+
+                pantallaExterna.Show();
+
+                pantallaExterna.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                pantallaExterna.WindowState = FormWindowState.Maximized;
+                pantallaExterna.Activate();
+            }
         }
+
 
         private void button12_Click(object sender, EventArgs e)
         {
@@ -192,6 +214,11 @@ namespace Proyecto_PA_Parcial_1.Formularios
         private void button14_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void button11_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

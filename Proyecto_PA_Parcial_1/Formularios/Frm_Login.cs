@@ -58,7 +58,11 @@ namespace Proyecto_PA_Parcial_1.Formularios
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("El módulo de solicitud de turnos se habilitará cuando Frm_Turnos sea implementado.", "TurnoSmarts", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Frm_Turnos formularioPrincipal = new Frm_Turnos();
+            formularioPrincipal.FormClosed += formularioPrincipal_FormClosed;
+            Hide();
+            formularioPrincipal.Show();
+
         }
 
         private string CalcularHash(string valor)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Proyecto_PA_Parcial_1.Controlador;
 
 namespace Proyecto_PA_Parcial_1
 {
@@ -17,6 +18,7 @@ namespace Proyecto_PA_Parcial_1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            TListDatosIniciales.CargarDatos();
             Application.Run(new Frm_Login());
         }
     }

@@ -162,14 +162,29 @@ namespace Proyecto_PA_Parcial_1.Formularios
             return valido;
         }
 
+
         private bool ExisteAtencionEnVentanilla()
         {
+            string codigoSucursal = comboBox1.SelectedValue == null
+                ? string.Empty
+                : Convert.ToString(comboBox1.SelectedValue);
+
             string ventanilla = ObtenerVentanilla();
+
+            var codigosFilas = controladorFilas
+                .ListarPorSucursal(codigoSucursal)
+                .Select(x => x.Codigo)
+                .ToList();
+
             bool existe = controladorTickets.Listar()
-                .Any(item => item.Ventanilla == ventanilla
-                    && (item.Estado == TListTickets.Llamado || item.Estado == TListTickets.EnAtencion));
+                .Any(x => codigosFilas.Contains(x.CodigoFila)
+                    && x.Ventanilla == ventanilla
+                    && (x.Estado == TListTickets.Llamado
+                        || x.Estado == TListTickets.EnAtencion));
+
             return existe;
         }
+
 
         private void MostrarTicketSeleccionado()
         {
@@ -216,17 +231,40 @@ namespace Proyecto_PA_Parcial_1.Formularios
             return resultado;
         }
 
+
         private void ActualizarEstadoControles()
         {
             Ticket ticket = ObtenerTicketSeleccionado();
-            bool hayFiltro = comboBox1.SelectedItem is Sucursal && comboBox2.SelectedItem is Fila;
-            bool puedeLlamar = hayFiltro && !ExisteAtencionEnVentanilla();
-            button2.Enabled = puedeLlamar;
-            button3.Enabled = ticket != null && ticket.Estado == TListTickets.Llamado;
-            button4.Enabled = ticket != null && ticket.Estado == TListTickets.EnAtencion;
-            button5.Enabled = ticket != null && (ticket.Estado == TListTickets.Llamado || ticket.Estado == TListTickets.EnAtencion);
-            button6.Enabled = ticket != null && (ticket.Estado == TListTickets.Omitido || ticket.Estado == TListTickets.Atendido);
+
+            bool hayFiltro = comboBox1.SelectedItem is Sucursal
+                && comboBox2.SelectedItem is Fila;
+
+            bool hayPendientes = false;
+
+            if (hayFiltro)
+            {
+                hayPendientes = controladorTickets
+                    .Listar(ObtenerCodigoFilaSeleccionada())
+                    .Any(x => x.Estado == TListTickets.Pendiente);
+            }
+
+            button2.Enabled = hayFiltro && hayPendientes;
+
+            button3.Enabled = ticket != null
+                && ticket.Estado == TListTickets.Llamado;
+
+            button4.Enabled = ticket != null
+                && ticket.Estado == TListTickets.EnAtencion;
+
+            button5.Enabled = ticket != null
+                && (ticket.Estado == TListTickets.Llamado
+                    || ticket.Estado == TListTickets.EnAtencion);
+
+            button6.Enabled = ticket != null
+                && (ticket.Estado == TListTickets.Omitido
+                    || ticket.Estado == TListTickets.Atendido);
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
