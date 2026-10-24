@@ -95,6 +95,24 @@
     <Compile Include="Formularios\Frm_Sucursales.Designer.cs">
       <DependentUpon>Frm_Sucursales.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\Frm_Totems.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Totems.Designer.cs">
+      <DependentUpon>Frm_Totems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Turnos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Turnos.Designer.cs">
+      <DependentUpon>Frm_Turnos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Usuarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Usuarios.Designer.cs">
+      <DependentUpon>Frm_Usuarios.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Formularios\Frm_Dashboard.resx">
