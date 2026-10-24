@@ -59,6 +59,18 @@
     <Compile Include="Entidades\Ticket.cs" />
     <Compile Include="Entidades\Totem.cs" />
     <Compile Include="Entidades\Usuario.cs" />
+    <Compile Include="Formularios\Frm_Atencion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Atencion.Designer.cs">
+      <DependentUpon>Frm_Atencion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Citas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Citas.Designer.cs">
+      <DependentUpon>Frm_Citas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\Frm_Dashboard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +101,12 @@
     <Compile Include="Formularios\Frm_Principal.Designer.cs">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\Frm_Reportes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Reportes.Designer.cs">
+      <DependentUpon>Frm_Reportes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\Frm_Sucursales.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +133,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Formularios\Frm_Atencion.resx">
+      <DependentUpon>Frm_Atencion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Dashboard.resx">
       <DependentUpon>Frm_Dashboard.cs</DependentUpon>
     </EmbeddedResource>
@@ -127,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Principal.resx">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Reportes.resx">
+      <DependentUpon>Frm_Reportes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Sucursales.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
