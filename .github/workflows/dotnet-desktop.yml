@@ -1,0 +1,31 @@
+
+name: Compilacion TurnoSmarts
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  compilar:
+    name: Compilar Windows Forms
+    runs-on: windows-2022
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar MSBuild
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Compilar TurnoSmarts
+        shell: pwsh
+        run: |
+          msbuild "Proyecto_PA_Parcial_1\Proyecto_PA_Parcial_1.csproj" `
+            -restore `
+            -property:RestorePackagesConfig=true `
+            -property:Configuration=Release `
+            -target:Rebuild `
+            -verbosity:minimal
