@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controlador\TListFilas.cs" />
+    <Compile Include="Controlador\TListRecordatorios.cs" />
+    <Compile Include="Controlador\TListSucursales.cs" />
+    <Compile Include="Controlador\TListTickets.cs" />
+    <Compile Include="Controlador\TListTotems.cs" />
+    <Compile Include="Controlador\TListUsuarios.cs" />
     <Compile Include="Entidades\Empresa.cs" />
     <Compile Include="Entidades\Fila.cs" />
     <Compile Include="Entidades\Recordatorio.cs" />
