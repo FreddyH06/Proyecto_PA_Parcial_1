@@ -95,11 +95,29 @@
     <Compile Include="Formularios\Frm_Login.Designer.cs">
       <DependentUpon>Frm_Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\Frm_Pantalla.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Pantalla.Designer.cs">
+      <DependentUpon>Frm_Pantalla.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Perfil.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Perfil.Designer.cs">
+      <DependentUpon>Frm_Perfil.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\Frm_Principal.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Formularios\Frm_Principal.Designer.cs">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Frm_Recordatorios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Frm_Recordatorios.Designer.cs">
+      <DependentUpon>Frm_Recordatorios.cs</DependentUpon>
     </Compile>
     <Compile Include="Formularios\Frm_Reportes.cs">
       <SubType>Form</SubType>
@@ -146,8 +164,14 @@
     <EmbeddedResource Include="Formularios\Frm_Login.resx">
       <DependentUpon>Frm_Login.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Pantalla.resx">
+      <DependentUpon>Frm_Pantalla.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Principal.resx">
       <DependentUpon>Frm_Principal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Frm_Recordatorios.resx">
+      <DependentUpon>Frm_Recordatorios.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\Frm_Reportes.resx">
       <DependentUpon>Frm_Reportes.cs</DependentUpon>
